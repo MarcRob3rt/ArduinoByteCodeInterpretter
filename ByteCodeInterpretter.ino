@@ -27,22 +27,8 @@ void setup() {
 //00000010 restarts executing the Codeblock at line 0
 //00000011 sets an Led (xy(Variablen) in next lines) to true;
 //00000100 Waits for nextline Miliseconds*10
-//00000101 Jump to Codeline written in next Line
-/*
- 
-00000011,
-00000001,
-00000010,
-00000100,
-11111111,
-01000001,
-00010000,
-00000001,
-01000010,
-00000001,
-00010000,
-00000010,
-*/
+//00000101 Jump to Codeline written in next Line + Line+2 so to bytes
+
 //SpeicherOperationen
 //01000001 setzt byte[Nächsterzeile] = Inhalt von übernächster
 //01000010 Addiert Variale[nächsterZeile] mit Variable[übernächsterzeile] und speichert dass Ergebniss in Variable[Zeile+3]
@@ -68,12 +54,25 @@ CodeLine+=3;
 return;
   }
        if(Code[CodeBlock][CodeLine]==B00000100){
-delay(Code[CodeBlock][CodeLine+1]+);
+delay(Code[CodeBlock][CodeLine+1]*10);
 CodeLine+=2;
 return;
   }
          if(Code[CodeBlock][CodeLine]==B00000101){
-CodeLine = Code[CodeBlock][CodeLine+1])*2;
+
+
+union TwoBytesInt {
+unsigned char fd[2];
+float GG;
+unsigned int AD; 
+}NUM;
+
+
+          
+NUM.AD=0;
+NUM.fd[0]=Code[CodeBlock][CodeLine+1];
+NUM.fd[1]=Code[CodeBlock][CodeLine+2];
+CodeLine = NUM.AD;
 return;
   }
   }else{
